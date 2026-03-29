@@ -1,0 +1,23 @@
+# R specific
+.Rproj.user
+.Rhistory
+.RData
+.Ruserdata
+*.Rproj
+
+# Data files (keep private)
+*.xlsx
+*.csv
+
+# Quarto intermediate files
+/.quarto/
+*_files/
+*.rdb
+*.rdx
+
+# Mac system files
+.DS_Store
+Thumbs.db
+
+# Rendered output (optional — remove these lines if you want to publish the HTML)
+# *.html
