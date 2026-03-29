@@ -1,0 +1,59 @@
+/* Make the references section use full width */
+#refs {
+  width: 100%;
+  max-width: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+/* Each reference as one normal flowing paragraph */
+#refs .csl-entry {
+  display: block;
+  width: 100%;
+  margin-bottom: 0.8em;
+  line-height: 1.4;
+  white-space: normal;
+  overflow-wrap: break-word;
+}
+
+/* Prevent bibliography subparts from being forced onto separate lines */
+#refs .csl-entry * {
+  display: inline !important;
+  float: none !important;
+  width: auto !important;
+  max-width: none !important;
+}
+
+/* Restore normal paragraph-like behavior for links */
+#refs .csl-entry a {
+  display: inline !important;
+  word-break: break-word;
+}
+
+/* Remove weird extra spacing from dashboard containers if present */
+.panel-tabset #refs,
+.card-body #refs,
+.quarto-dashboard-content #refs {
+  width: 100%;
+  max-width: 100%;
+}
+
+/* Make value boxes smaller overall */
+.bslib-value-box {
+  min-height: 80px !important;
+}
+
+/* Shrink the value number */
+.bslib-value-box .value-box-value {
+  font-size: 1.6rem !important;
+}
+
+/* Shrink the title text */
+.bslib-value-box .value-box-title {
+  font-size: 0.8rem !important;
+}
+
+/* Shrink the icon */
+.bslib-value-box .bi {
+  font-size: 1.6rem !important;
+}

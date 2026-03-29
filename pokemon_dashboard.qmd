@@ -1,0 +1,355 @@
+---
+title: "Pokémon Dashboard"
+format:
+  dashboard:
+    theme: zephyr
+    nav-buttons: [github]
+    css: custom.css
+bibliography: references.bib
+csl: apa.csl
+link-citations: false
+citations-hover: true
+execute:
+  echo: false
+  warning: false
+  message: false
+---
+
+```{r setup}
+library(tidyverse)
+library(readxl)
+library(janitor)
+library(fmsb)
+library(plotly)
+library(scales)
+library(cluster)
+library(ggrepel)
+library(crosstalk)
+
+pokemon_raw   <- read_excel("/Users/kalle/Desktop/Pokemon/pokemon.xlsx") %>% clean_names()
+evolution_raw <- read_csv("/Users/kalle/Desktop/Pokemon/evolution_long.csv") %>% clean_names()
+
+pokemon_wide <- pokemon_raw %>%
+  select(-any_of("x1")) %>%
+  group_by(number, name, total, hp, attack, defense,
+           special_attack, special_defense, speed) %>%
+  mutate(type_rank = paste0("type_", row_number())) %>%
+  ungroup() %>%
+  pivot_wider(names_from = type_rank, values_from = type)
+
+clean_name <- function(x) {
+  x %>% str_to_lower() %>% str_trim() %>%
+    str_replace_all("'", "") %>% str_replace_all("\\.", "") %>%
+    str_replace_all("-", "") %>% str_replace_all("\\s+", "")
+}
+
+pokemon_wide <- pokemon_wide %>%
+  mutate(name_clean = clean_name(name))
+
+evolution_clean <- evolution_raw %>%
+  transmute(
+    evolving_from = clean_name(evolving_from),
+    evolving_to   = clean_name(evolving_to),
+    trigger       = trigger
+  )
+
+pokemon_wide <- pokemon_wide %>%
+  left_join(
+    evolution_clean %>%
+      rename(name_clean = evolving_from, evolves_to = evolving_to, evo_trigger = trigger),
+    by = "name_clean"
+  ) %>%
+  left_join(
+    evolution_clean %>%
+      rename(name_clean = evolving_to, evolves_from = evolving_from) %>%
+      select(name_clean, evolves_from),
+    by = "name_clean"
+  ) %>%
+  mutate(
+    evolution_stage = case_when(
+      is.na(evolves_from) & !is.na(evolves_to)  ~ 1L,
+      !is.na(evolves_from) & !is.na(evolves_to) ~ 2L,
+      !is.na(evolves_from) & is.na(evolves_to)  ~ 3L,
+      TRUE ~ 0L
+    )
+  ) %>%
+  filter(!str_detect(str_to_lower(name), "mega"))
+
+pokemon_wide_unique <- pokemon_wide %>%
+  distinct(name_clean, .keep_all = TRUE)
+
+type_colours <- c(
+  NORMAL   = "#A8A878", FIRE     = "#F08030", WATER    = "#6890F0",
+  ELECTRIC = "#F8D030", GRASS    = "#78C850", ICE      = "#98D8D8",
+  FIGHTING = "#C03028", POISON   = "#A040A0", GROUND   = "#E0C068",
+  FLYING   = "#A890F0", PSYCHIC  = "#F85888", BUG      = "#A8B820",
+  ROCK     = "#B8A038", GHOST    = "#705898", DRAGON   = "#7038F8",
+  DARK     = "#705848", STEEL    = "#B8B8D0", FAIRY    = "#EE99AC"
+)
+
+evolution_gain <- pokemon_wide_unique %>%
+  filter(!is.na(evolves_to)) %>%
+  left_join(
+    pokemon_wide_unique %>%
+      select(name_clean, total, hp, attack, defense,
+             special_attack, special_defense, speed) %>%
+      rename(evolves_to = name_clean),
+    by = "evolves_to",
+    suffix = c("_base", "_next")
+  ) %>%
+  mutate(
+    stage_transition  = paste0(evolution_stage, " → ", evolution_stage + 1L),
+    total_gain        = total_next            - total_base,
+    hp_gain           = hp_next               - hp_base,
+    attack_gain       = attack_next           - attack_base,
+    defense_gain      = defense_next          - defense_base,
+    sp_atk_gain       = special_attack_next   - special_attack_base,
+    sp_def_gain       = special_defense_next  - special_defense_base,
+    speed_gain        = speed_next            - speed_base
+  ) %>%
+  filter(!is.na(total_gain))
+
+gain_profile <- evolution_gain %>%
+  filter(type_1 != "FLYING") %>%
+  group_by(type_1, stage_transition) %>%
+  summarise(mean_gain = mean(total_gain, na.rm = TRUE), .groups = "drop") %>%
+  pivot_wider(names_from = stage_transition, values_from = mean_gain) %>%
+  drop_na()
+
+clustering_scaled <- gain_profile %>%
+  select(`1 → 2`, `2 → 3`) %>%
+  scale()
+
+set.seed(123)
+kmeans_result <- kmeans(clustering_scaled, centers = 3, nstart = 50)
+
+gain_profile <- gain_profile %>%
+  mutate(
+    cluster = factor(kmeans_result$cluster),
+    cluster = recode(cluster,
+      "1" = "Early Bloomers",
+      "2" = "Late Bloomers",
+      "3" = "Steady Growth"
+    )
+  )
+
+cluster_colours <- c(
+  "Early Bloomers" = "#F08030",
+  "Late Bloomers"  = "#78C850",
+  "Steady Growth"  = "#6890F0"
+)
+```
+
+# Overview
+
+## Row {height="12%"}
+
+```{r}
+#| content: valuebox
+#| title: "Total Pokémon"
+list(icon = "stars", color = "#6890F0", value = nrow(pokemon_wide))
+```
+
+```{r}
+#| content: valuebox
+#| title: "Types"
+list(icon = "grid-fill", color = "#78C850", value = n_distinct(pokemon_wide$type_1))
+```
+
+```{r}
+#| content: valuebox
+#| title: "With Evolutions"
+list(icon = "arrow-up-circle-fill", color = "#F08030",
+     value = sum(!is.na(pokemon_wide$evolves_to)))
+```
+
+```{r}
+#| content: valuebox
+#| title: "Standalone Pokémon"
+list(icon = "shield-fill", color = "#A040A0",
+     value = sum(pokemon_wide$evolution_stage == 0))
+```
+
+## Row {height="73%"}
+
+```{r}
+#| title: "Dragon & Steel types dominate in raw power; Bug & Normal are the weakest overall"
+
+type_summary_full <- pokemon_wide %>%
+  group_by(type_1) %>%
+  summarise(across(c(hp, attack, defense, special_attack, special_defense, speed),
+                   ~ mean(., na.rm = TRUE)), .groups = "drop")
+
+type_summary_scaled <- type_summary_full %>%
+  mutate(across(hp:speed, ~ (. - min(.)) / (max(.) - min(.))))
+
+par(mfrow = c(3, 6), mar = c(1, 1, 2, 1), bg = NA)
+
+for (i in 1:nrow(type_summary_scaled)) {
+  one_type  <- type_summary_scaled[i, ]
+  type_name <- one_type$type_1
+  col       <- type_colours[type_name]
+  radar_data <- rbind(
+    rep(1, 6), rep(0, 6),
+    one_type[, c("hp", "attack", "defense", "special_attack", "special_defense", "speed")]
+  )
+  radarchart(
+    radar_data, axistype = 0, pcol = col,
+    pfcol = adjustcolor(col, alpha.f = 0.15),
+    plwd = 2, plty = 1, cglcol = "grey70", cglty = 1,
+    axislabcol = "grey40", vlcex = 0.8, title = type_name
+  )
+}
+```
+
+## Row {height="15%"}
+
+::: {.callout-note collapse="true"}
+## How to read this chart
+
+Each spider chart shows the **average stat profile** for all Pokémon of that primary type, scaled from 0 to 1 relative to the weakest and strongest type on each stat. The shape reveals a type's relative strengths and weaknesses — a wide chart means well-rounded, a chart skewed to one axis means a specialist type. Stats shown are HP, Attack, Defense, Special Attack, Special Defense, and Speed.
+:::
+
+# Growth Typologies
+
+## Row {height="70%"}
+
+```{r}
+#| title: "Dragon & Bug types gain the most in their final evolution; Fighting types peak early"
+
+ggplot(gain_profile, aes(x = `1 → 2`, y = `2 → 3`, color = cluster)) +
+  geom_abline(slope = 1, intercept = 0, linetype = "dashed",
+              color = "grey70", linewidth = 0.5) +
+  geom_point(size = 5, alpha = 0.9) +
+  geom_text_repel(
+    aes(label = type_1), size = 3.5, fontface = "bold",
+    box.padding = 0.5, point.padding = 0.3,
+    segment.color = "grey70", segment.size = 0.4,
+    show.legend = FALSE
+  ) +
+  scale_color_manual(values = cluster_colours) +
+  labs(
+    x     = "Average stat gain: stage 1 → 2",
+    y     = "Average stat gain: stage 2 → 3",
+    color = NULL
+  ) +
+  theme_minimal(base_size = 13) +
+  theme(
+    legend.position  = "top",
+    legend.text      = element_text(size = 11),
+    panel.grid.minor = element_blank(),
+    panel.grid.major = element_line(color = "grey92", linewidth = 0.4),
+    axis.title       = element_text(color = "grey40", size = 11),
+    axis.text        = element_text(color = "grey50")
+  )
+```
+
+## Row {height="30%"}
+
+::: {.callout-note collapse="true"}
+## How to read this chart & method details
+
+Each point is a Pokémon **type**, positioned by its average total stat gain from stage 1→2 (x-axis) and stage 2→3 (y-axis). Points **above the dashed diagonal** gain more in their final evolution; points **below** peak earlier.
+
+The three clusters were identified using **k-means clustering** (k=3, chosen via the silhouette method) on the two gain variables after standardisation:
+
+-   **Early Bloomers** — gain most stat points in the first evolution (stage 1→2)
+-   **Steady Growth** — gain roughly equally across both transitions
+-   **Late Bloomers** — gain most stat points in the final evolution (stage 2→3)
+
+FLYING type was excluded due to insufficient data across both evolution stages.
+:::
+
+# Evolution Triggers
+
+## Row {height="70%"}
+
+```{r}
+#| title: "Using an item triggers the largest stat gains — trading produces the smallest boost"
+
+library(crosstalk)
+
+plot_data <- evolution_gain %>%
+  filter(!is.na(evo_trigger)) %>%
+  group_by(evo_trigger) %>%
+  filter(n() >= 3) %>%
+  ungroup() %>%
+  mutate(evo_trigger = as.character(reorder(evo_trigger, total_gain, FUN = median)))
+
+shared_data <- SharedData$new(plot_data, key = ~evo_trigger, group = "trigger")
+
+htmltools::tags$div(
+  style = "
+    background: #f8f9fa;
+    border-radius: 8px;
+    padding: 10px 16px;
+    margin-bottom: 12px;
+    font-size: 13px;
+    color: #444;
+  ",
+  htmltools::tags$p(
+    style = "font-weight: 600; margin-bottom: 6px; color: #333;",
+    "Select evolution trigger:"
+  ),
+  filter_checkbox(
+    id         = "trigger_filter",
+    label      = "",
+    sharedData = shared_data,
+    group      = ~evo_trigger,
+    inline     = TRUE
+  )
+)
+
+p <- ggplot(shared_data, aes(x = evo_trigger, y = total_gain,
+                              fill = evo_trigger, color = evo_trigger)) +
+  geom_boxplot(
+    alpha = 0.7, width = 0.5,
+    outlier.shape = 21, outlier.size = 2, outlier.alpha = 0.6
+  ) +
+  geom_jitter(width = 0.15, size = 1.8, alpha = 0.4) +
+  stat_summary(fun = mean, geom = "point", shape = 23,
+               size = 3, fill = "white", color = "grey30") +
+  scale_fill_manual(
+    values = c("use-item" = "#F08030", "level-up" = "#6890F0", "trade" = "#78C850"),
+    guide  = "none"
+  ) +
+  scale_color_manual(
+    values = c("use-item" = "#F08030", "level-up" = "#6890F0", "trade" = "#78C850"),
+    guide  = "none"
+  ) +
+  coord_flip() +
+  labs(x = NULL, y = "Total stat gain") +
+  theme_minimal(base_size = 13) +
+  theme(
+    panel.grid.minor   = element_blank(),
+    panel.grid.major.y = element_blank(),
+    panel.grid.major.x = element_line(color = "grey92", linewidth = 0.4),
+    axis.text          = element_text(color = "grey40", size = 12)
+  )
+
+ggplotly(p, tooltip = c("y"))
+```
+
+## Row {height="30%"}
+
+::: {.callout-note collapse="true"}
+## How to read this chart & significance tests
+
+Each box shows the **distribution of total stat gain** for all evolution events triggered by that method. The central line is the median, the diamond is the mean, and individual points show each individual Pokémon evolution. Only triggers with at least 3 cases are included.
+
+Group differences were tested using the Kruskal-Wallis test [@kruskal1952] followed by pairwise Wilcoxon tests [@wilcoxon1945] with Bonferroni correction. All visualisations were created using ggplot2 [@wickham2016] and the tidyverse [@wickham2019].
+
+**All three trigger types differ significantly from each other:**
+
+-   Kruskal-Wallis test: χ²(2) = 18.99, p \< 0.001
+-   use-item vs level-up: p = 0.008 (Wilcoxon, Bonferroni corrected)
+-   use-item vs trade: p \< 0.001
+-   level-up vs trade: p = 0.008
+
+This suggests that the effort or rarity required to trigger an evolution is reflected in the resulting stat boost — items and trades represent more deliberate or rare events than simply levelling up.
+:::
+
+# References
+
+::: {#refs}
+:::

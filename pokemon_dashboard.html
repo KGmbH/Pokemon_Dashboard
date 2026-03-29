@@ -1,0 +1,829 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.9.36">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>Pokémon Dashboard</title>
+<style>
+/* Default styles provided by pandoc.
+** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+*/
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for citations */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+  margin-bottom: 0em;
+}
+.hanging-indent div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}</style>
+
+
+<script src="pokemon_dashboard_files/libs/clipboard/clipboard.min.js"></script>
+<script src="pokemon_dashboard_files/libs/quarto-html/quarto.js" type="module"></script>
+<script src="pokemon_dashboard_files/libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="pokemon_dashboard_files/libs/quarto-html/popper.min.js"></script>
+<script src="pokemon_dashboard_files/libs/quarto-html/tippy.umd.min.js"></script>
+<script src="pokemon_dashboard_files/libs/quarto-html/anchor.min.js"></script>
+<link href="pokemon_dashboard_files/libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="pokemon_dashboard_files/libs/quarto-html/quarto-syntax-highlighting-845c23b38eaddc0f92fda52bfe77a8c8.css" rel="stylesheet" class="quarto-color-scheme" id="quarto-text-highlighting-styles">
+<link href="pokemon_dashboard_files/libs/quarto-html/quarto-syntax-highlighting-dark-f418161beb48e0141c760e455f12af2c.css" rel="stylesheet" class="quarto-color-scheme quarto-color-alternate" id="quarto-text-highlighting-styles">
+<link href="pokemon_dashboard_files/libs/quarto-html/quarto-syntax-highlighting-845c23b38eaddc0f92fda52bfe77a8c8.css" rel="stylesheet" class="quarto-color-scheme-extra" id="quarto-text-highlighting-styles">
+<script src="pokemon_dashboard_files/libs/bootstrap/bootstrap.min.js"></script>
+<link href="pokemon_dashboard_files/libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="pokemon_dashboard_files/libs/bootstrap/bootstrap-4747a8f8fbf72d901825f2231c606239.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
+<link href="pokemon_dashboard_files/libs/bootstrap/bootstrap-dark-4747a8f8fbf72d901825f2231c606239.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="light">
+<link href="pokemon_dashboard_files/libs/bootstrap/bootstrap-4747a8f8fbf72d901825f2231c606239.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme-extra" id="quarto-bootstrap" data-mode="light">
+<script src="pokemon_dashboard_files/libs/quarto-dashboard/quarto-dashboard.js"></script>
+<script src="pokemon_dashboard_files/libs/quarto-dashboard/stickythead.js"></script>
+
+
+
+<script src="pokemon_dashboard_files/libs/quarto-dashboard/web-components.js" type="module"></script>
+<script src="pokemon_dashboard_files/libs/quarto-dashboard/components.js"></script>
+
+<script src="pokemon_dashboard_files/libs/jquery-3.5.1/jquery.min.js"></script>
+<link href="pokemon_dashboard_files/libs/crosstalk-1.2.2/css/crosstalk.min.css" rel="stylesheet">
+<script src="pokemon_dashboard_files/libs/crosstalk-1.2.2/js/crosstalk.min.js"></script>
+<link href="pokemon_dashboard_files/libs/htmltools-fill-0.5.9/fill.css" rel="stylesheet">
+<script src="pokemon_dashboard_files/libs/htmlwidgets-1.6.4/htmlwidgets.js"></script>
+<script src="pokemon_dashboard_files/libs/plotly-binding-4.12.0/plotly.js"></script>
+<script src="pokemon_dashboard_files/libs/typedarray-0.1/typedarray.min.js"></script>
+<link href="pokemon_dashboard_files/libs/plotly-htmlwidgets-css-2.25.2/plotly-htmlwidgets.css" rel="stylesheet">
+<script src="pokemon_dashboard_files/libs/plotly-main-2.25.2/plotly-latest.min.js"></script>
+
+
+<link rel="stylesheet" href="custom.css">
+</head>
+
+<body class="quarto-dashboard dashboard-fill fullcontent quarto-light">
+
+<header id="quarto-dashboard-header">
+<nav class="navbar navbar-expand-md slim" data-bs-theme="dark">
+  <div class="navbar-container container-fluid">
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#dashboard-collapse" aria-controls="dashboard-collapse" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>    
+
+
+    <div class="navbar-brand-container">
+
+
+      <div class="navbar-title">
+        <div class="navbar-title-text"><a href="#">Pokémon Dashboard</a></div>
+        
+        
+      </div>
+    </div>
+<div id="dashboard-collapse" class="navbar-collapse collapse"><ul class="navbar-nav navbar-nav-scroll me-auto" role="tablist"><li class="nav-item" role="presentation"><a id="tab-overview" class="nav-link active" data-bs-toggle="tab" role="tab" data-bs-target="#overview" data-scrolling="false" href="#overview" aria-controls="overview" aria-selected="true"><span class="nav-link-text">Overview</span></a></li><li class="nav-item" role="presentation"><a id="tab-growth-typologies" class="nav-link" data-bs-toggle="tab" role="tab" data-bs-target="#growth-typologies" data-scrolling="false" href="#growth-typologies" aria-controls="growth-typologies" aria-selected="false"><span class="nav-link-text">Growth Typologies</span></a></li><li class="nav-item" role="presentation"><a id="tab-evolution-triggers" class="nav-link" data-bs-toggle="tab" role="tab" data-bs-target="#evolution-triggers" data-scrolling="false" href="#evolution-triggers" aria-controls="evolution-triggers" aria-selected="false"><span class="nav-link-text">Evolution Triggers</span></a></li><li class="nav-item" role="presentation"><a id="tab-references" class="nav-link" data-bs-toggle="tab" role="tab" data-bs-target="#references" data-scrolling="false" href="#references" aria-controls="references" aria-selected="false"><span class="nav-link-text">References</span></a></li></ul></div></div>
+</nav>
+</header>
+<div class="page-layout-custom quarto-dashboard-content bslib-gap-spacing html-fill-container bslib-page-fill quarto-dashboard-pages">  
+
+<div class="bslib-grid-item html-fill-item tab-content bslib-grid" data-layout="fill" style="display: grid; grid-template-rows: minmax(3em, 1fr); grid-auto-columns: minmax(0, 1fr);">
+<div id="overview" class="dashboard-page tab-pane show active html-fill-item html-fill-container" data-orientation="rows" aria-labelledby="tab-overview">
+<div class="html-fill-item html-fill-container bslib-grid" style="display: grid; grid-template-rows: minmax(3em, 12fr) minmax(3em, 73fr) minmax(3em, 15fr); grid-auto-columns: minmax(0, 1fr);">
+<div class="html-fill-item html-fill-container bslib-grid" style="display: grid; grid-template-columns: minmax(3em, 1fr) minmax(3em, 1fr) minmax(3em, 1fr) minmax(3em, 1fr);
+grid-auto-rows: minmax(0, 1fr);">
+<div class="card valuebox cell html-fill-item html-fill-container bslib-card bslib-value-box showcase-left-center" data-bslib-card-init="" data-require-bs-caller="card()" style=" background: #6890F0;">
+<div class="card-body html-fill-item html-fill-container">
+<div data-icon="stars" class="html-fill-item html-fill-container value-box-grid">
+<div class="value-box-showcase html-fill-item html-fill-container">
+
+<i class="bi bi-stars"></i></div>
+<div class="value-box-area">
+<p class="value-box-title">
+Total Pokémon
+</p>
+<p class="value-box-value">
+865
+</p>
+</div>
+</div>
+</div>
+<script data-bslib-card-init="">bslib.Card.initializeAllCards();</script></div><div class="card valuebox cell html-fill-item html-fill-container bslib-card bslib-value-box showcase-left-center" data-bslib-card-init="" data-require-bs-caller="card()" style=" background: #78C850;">
+<div class="card-body html-fill-item html-fill-container">
+<div data-icon="grid-fill" class="html-fill-item html-fill-container value-box-grid">
+<div class="value-box-showcase html-fill-item html-fill-container">
+
+<i class="bi bi-grid-fill"></i></div>
+<div class="value-box-area">
+<p class="value-box-title">
+Types
+</p>
+<p class="value-box-value">
+18
+</p>
+</div>
+</div>
+</div>
+<script data-bslib-card-init="">bslib.Card.initializeAllCards();</script></div><div class="card valuebox cell html-fill-item html-fill-container bslib-card bslib-value-box showcase-left-center" data-bslib-card-init="" data-require-bs-caller="card()" style=" background: #F08030;">
+<div class="card-body html-fill-item html-fill-container">
+<div data-icon="arrow-up-circle-fill" class="html-fill-item html-fill-container value-box-grid">
+<div class="value-box-showcase html-fill-item html-fill-container">
+
+<i class="bi bi-arrow-up-circle-fill"></i></div>
+<div class="value-box-area">
+<p class="value-box-title">
+With Evolutions
+</p>
+<p class="value-box-value">
+422
+</p>
+</div>
+</div>
+</div>
+<script data-bslib-card-init="">bslib.Card.initializeAllCards();</script></div><div class="card valuebox cell html-fill-item html-fill-container bslib-card bslib-value-box showcase-left-center" data-bslib-card-init="" data-require-bs-caller="card()" style=" background: #A040A0;">
+<div class="card-body html-fill-item html-fill-container">
+<div data-icon="shield-fill" class="html-fill-item html-fill-container value-box-grid">
+<div class="value-box-showcase html-fill-item html-fill-container">
+
+<i class="bi bi-shield-fill"></i></div>
+<div class="value-box-area">
+<p class="value-box-title">
+Standalone Pokémon
+</p>
+<p class="value-box-value">
+140
+</p>
+</div>
+</div>
+</div>
+<script data-bslib-card-init="">bslib.Card.initializeAllCards();</script></div>
+</div>
+<div class="html-fill-item html-fill-container bslib-grid" style="display: grid; grid-template-columns: minmax(3em, 1fr);
+grid-auto-rows: minmax(0, 1fr);">
+<div class="card cell html-fill-item html-fill-container bslib-card" data-title="Dragon &amp; Steel types dominate in raw power; Bug &amp; Normal are the weakest overall" data-bslib-card-init="" data-require-bs-caller="card()" data-full-screen="false">
+<div class="card-header"><div class="card-title"><span style="display: inline">
+Dragon &amp; Steel types dominate in raw power; Bug &amp; Normal are the weakest overall
+</span></div></div>
+<div class="card-body html-fill-item html-fill-container">
+<div class="cell-output-display html-fill-item html-fill-container">
+<img src="pokemon_dashboard_files/figure-html/unnamed-chunk-5-1.png" class="img-fluid quarto-dashboard-img-contain">
+</div>
+</div>
+<bslib-tooltip placement="auto" bsoptions="[]" data-require-bs-version="5" data-require-bs-caller="tooltip()">
+    <template>Expand</template>
+    <span class="bslib-full-screen-enter badge rounded-pill">
+        <svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24" style="height:1em;width:1em;" aria-hidden="true" role="img"><path d="M20 5C20 4.4 19.6 4 19 4H13C12.4 4 12 3.6 12 3C12 2.4 12.4 2 13 2H21C21.6 2 22 2.4 22 3V11C22 11.6 21.6 12 21 12C20.4 12 20 11.6 20 11V5ZM4 19C4 19.6 4.4 20 5 20H11C11.6 20 12 20.4 12 21C12 21.6 11.6 22 11 22H3C2.4 22 2 21.6 2 21V13C2 12.4 2.4 12 3 12C3.6 12 4 12.4 4 13V19Z"></path></svg>
+    </span>
+</bslib-tooltip><script data-bslib-card-init="">bslib.Card.initializeAllCards();</script></div>
+</div>
+<div class="html-fill-item html-fill-container bslib-grid" style="display: grid; grid-template-columns: minmax(3em, 1fr);
+grid-auto-rows: minmax(0, 1fr);">
+<div class="card html-fill-item html-fill-container bslib-card" data-fill="false" data-bslib-card-init="" data-require-bs-caller="card()" data-full-screen="false">
+<div class="card-body html-fill-item html-fill-container">
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center collapsed html-fill-item html-fill-container" data-bs-toggle="collapse" data-bs-target=".callout-1-contents" aria-controls="callout-1" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container html-fill-item html-fill-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill html-fill-item html-fill-container">
+<span class="screen-reader-only">Note</span>How to read this chart
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end html-fill-item html-fill-container"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-1" class="callout-1-contents callout-collapse collapse html-fill-item html-fill-container">
+<div class="callout-body-container callout-body html-fill-item html-fill-container">
+<p>Each spider chart shows the <strong>average stat profile</strong> for all Pokémon of that primary type, scaled from 0 to 1 relative to the weakest and strongest type on each stat. The shape reveals a type’s relative strengths and weaknesses — a wide chart means well-rounded, a chart skewed to one axis means a specialist type. Stats shown are HP, Attack, Defense, Special Attack, Special Defense, and Speed.</p>
+</div>
+</div>
+</div>
+</div>
+<bslib-tooltip placement="auto" bsoptions="[]" data-require-bs-version="5" data-require-bs-caller="tooltip()">
+    <template>Expand</template>
+    <span class="bslib-full-screen-enter badge rounded-pill">
+        <svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24" style="height:1em;width:1em;" aria-hidden="true" role="img"><path d="M20 5C20 4.4 19.6 4 19 4H13C12.4 4 12 3.6 12 3C12 2.4 12.4 2 13 2H21C21.6 2 22 2.4 22 3V11C22 11.6 21.6 12 21 12C20.4 12 20 11.6 20 11V5ZM4 19C4 19.6 4.4 20 5 20H11C11.6 20 12 20.4 12 21C12 21.6 11.6 22 11 22H3C2.4 22 2 21.6 2 21V13C2 12.4 2.4 12 3 12C3.6 12 4 12.4 4 13V19Z"></path></svg>
+    </span>
+</bslib-tooltip><script data-bslib-card-init="">bslib.Card.initializeAllCards();</script></div>
+</div>
+</div>
+</div>
+<div id="growth-typologies" class="dashboard-page tab-pane grid-skip html-fill-item html-fill-container" data-orientation="rows" aria-labelledby="tab-growth-typologies">
+<div class="html-fill-item html-fill-container bslib-grid" style="display: grid; grid-template-rows: minmax(3em, 70fr) minmax(3em, 30fr); grid-auto-columns: minmax(0, 1fr);">
+<div class="html-fill-item html-fill-container bslib-grid" style="display: grid; grid-template-columns: minmax(3em, 1fr);
+grid-auto-rows: minmax(0, 1fr);">
+<div class="card cell html-fill-item html-fill-container bslib-card" data-title="Dragon &amp; Bug types gain the most in their final evolution; Fighting types peak early" data-bslib-card-init="" data-require-bs-caller="card()" data-full-screen="false">
+<div class="card-header"><div class="card-title"><span style="display: inline">
+Dragon &amp; Bug types gain the most in their final evolution; Fighting types peak early
+</span></div></div>
+<div class="card-body html-fill-item html-fill-container">
+<div class="cell-output-display html-fill-item html-fill-container">
+<img src="pokemon_dashboard_files/figure-html/unnamed-chunk-6-1.png" class="img-fluid quarto-dashboard-img-contain">
+</div>
+</div>
+<bslib-tooltip placement="auto" bsoptions="[]" data-require-bs-version="5" data-require-bs-caller="tooltip()">
+    <template>Expand</template>
+    <span class="bslib-full-screen-enter badge rounded-pill">
+        <svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24" style="height:1em;width:1em;" aria-hidden="true" role="img"><path d="M20 5C20 4.4 19.6 4 19 4H13C12.4 4 12 3.6 12 3C12 2.4 12.4 2 13 2H21C21.6 2 22 2.4 22 3V11C22 11.6 21.6 12 21 12C20.4 12 20 11.6 20 11V5ZM4 19C4 19.6 4.4 20 5 20H11C11.6 20 12 20.4 12 21C12 21.6 11.6 22 11 22H3C2.4 22 2 21.6 2 21V13C2 12.4 2.4 12 3 12C3.6 12 4 12.4 4 13V19Z"></path></svg>
+    </span>
+</bslib-tooltip><script data-bslib-card-init="">bslib.Card.initializeAllCards();</script></div>
+</div>
+<div class="html-fill-item html-fill-container bslib-grid" style="display: grid; grid-template-columns: minmax(3em, 1fr);
+grid-auto-rows: minmax(0, 1fr);">
+<div class="card html-fill-item html-fill-container bslib-card" data-fill="false" data-bslib-card-init="" data-require-bs-caller="card()" data-full-screen="false">
+<div class="card-body html-fill-item html-fill-container">
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center collapsed html-fill-item html-fill-container" data-bs-toggle="collapse" data-bs-target=".callout-2-contents" aria-controls="callout-2" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container html-fill-item html-fill-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill html-fill-item html-fill-container">
+<span class="screen-reader-only">Note</span>How to read this chart &amp; method details
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end html-fill-item html-fill-container"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-2" class="callout-2-contents callout-collapse collapse html-fill-item html-fill-container">
+<div class="callout-body-container callout-body html-fill-item html-fill-container">
+<p>Each point is a Pokémon <strong>type</strong>, positioned by its average total stat gain from stage 1→2 (x-axis) and stage 2→3 (y-axis). Points <strong>above the dashed diagonal</strong> gain more in their final evolution; points <strong>below</strong> peak earlier.</p>
+<p>The three clusters were identified using <strong>k-means clustering</strong> (k=3, chosen via the silhouette method) on the two gain variables after standardisation:</p>
+<ul>
+<li><strong>Early Bloomers</strong> — gain most stat points in the first evolution (stage 1→2)</li>
+<li><strong>Steady Growth</strong> — gain roughly equally across both transitions</li>
+<li><strong>Late Bloomers</strong> — gain most stat points in the final evolution (stage 2→3)</li>
+</ul>
+<p>FLYING type was excluded due to insufficient data across both evolution stages.</p>
+</div>
+</div>
+</div>
+</div>
+<bslib-tooltip placement="auto" bsoptions="[]" data-require-bs-version="5" data-require-bs-caller="tooltip()">
+    <template>Expand</template>
+    <span class="bslib-full-screen-enter badge rounded-pill">
+        <svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24" style="height:1em;width:1em;" aria-hidden="true" role="img"><path d="M20 5C20 4.4 19.6 4 19 4H13C12.4 4 12 3.6 12 3C12 2.4 12.4 2 13 2H21C21.6 2 22 2.4 22 3V11C22 11.6 21.6 12 21 12C20.4 12 20 11.6 20 11V5ZM4 19C4 19.6 4.4 20 5 20H11C11.6 20 12 20.4 12 21C12 21.6 11.6 22 11 22H3C2.4 22 2 21.6 2 21V13C2 12.4 2.4 12 3 12C3.6 12 4 12.4 4 13V19Z"></path></svg>
+    </span>
+</bslib-tooltip><script data-bslib-card-init="">bslib.Card.initializeAllCards();</script></div>
+</div>
+</div>
+</div>
+<div id="evolution-triggers" class="dashboard-page tab-pane grid-skip html-fill-item html-fill-container" data-orientation="rows" aria-labelledby="tab-evolution-triggers">
+<div class="html-fill-item html-fill-container bslib-grid" style="display: grid; grid-template-rows: minmax(3em, 70fr) minmax(3em, 30fr); grid-auto-columns: minmax(0, 1fr);">
+<div class="html-fill-item html-fill-container bslib-grid" style="display: grid; grid-template-columns: minmax(3em, 1fr);
+grid-auto-rows: minmax(0, 1fr);">
+<div class="card cell html-fill-item html-fill-container bslib-card" data-title="Using an item triggers the largest stat gains — trading produces the smallest boost" data-bslib-card-init="" data-require-bs-caller="card()" data-full-screen="false">
+<div class="card-header"><div class="card-title"><span style="display: inline">
+Using an item triggers the largest stat gains — trading produces the smallest boost
+</span></div></div>
+<div class="card-body html-fill-item html-fill-container">
+<div class="cell-output-display html-fill-item html-fill-container">
+<div style="
+    background: #f8f9fa;
+    border-radius: 8px;
+    padding: 10px 16px;
+    margin-bottom: 12px;
+    font-size: 13px;
+    color: #444;
+  " class="html-fill-item html-fill-container">
+<p style="font-weight: 600; margin-bottom: 6px; color: #333;">Select evolution trigger:</p>
+<div id="trigger_filter" class="form-group crosstalk-input-checkboxgroup crosstalk-input html-fill-item html-fill-container">
+<label class="control-label" for="trigger_filter"></label>
+<div class="crosstalk-options-group html-fill-item html-fill-container">
+<label class="checkbox-inline">
+<input type="checkbox" name="trigger_filter" value="level-up">
+<span>level-up</span>
+</label>
+<label class="checkbox-inline">
+<input type="checkbox" name="trigger_filter" value="trade">
+<span>trade</span>
+</label>
+<label class="checkbox-inline">
+<input type="checkbox" name="trigger_filter" value="use-item">
+<span>use-item</span>
+</label>
+</div>
+<script type="application/json" data-for="trigger_filter">{
+  "map": {
+    "level-up": ["level-up", "level-up", "level-up", "level-up", "level-up", "level-up", "level-up", "level-up", "level-up", "level-up", "level-up", "level-up", "level-up", "level-up", "level-up", "level-up", "level-up", "level-up", "level-up", "level-up", "level-up", "level-up", "level-up", "level-up", "level-up", "level-up", "level-up", "level-up", "level-up", "level-up", "level-up", "level-up", "level-up", "level-up", "level-up", "level-up", "level-up", "level-up", "level-up", "level-up", "level-up", "level-up", "level-up", "level-up", "level-up", "level-up", "level-up", "level-up", "level-up", "level-up", "level-up", "level-up", "level-up", "level-up", "level-up", "level-up", "level-up", "level-up", "level-up", "level-up", "level-up", "level-up", "level-up", "level-up", "level-up", "level-up", "level-up", "level-up", "level-up", "level-up", "level-up", "level-up", "level-up", "level-up", "level-up", "level-up", "level-up", "level-up", "level-up", "level-up", "level-up", "level-up", "level-up", "level-up", "level-up", "level-up", "level-up", "level-up", "level-up", "level-up", "level-up", "level-up", "level-up", "level-up", "level-up", "level-up", "level-up", "level-up", "level-up", "level-up", "level-up", "level-up", "level-up", "level-up", "level-up", "level-up", "level-up", "level-up", "level-up", "level-up", "level-up", "level-up", "level-up", "level-up", "level-up", "level-up", "level-up", "level-up", "level-up", "level-up", "level-up", "level-up", "level-up", "level-up", "level-up", "level-up", "level-up", "level-up", "level-up", "level-up", "level-up", "level-up", "level-up", "level-up", "level-up", "level-up", "level-up", "level-up", "level-up", "level-up", "level-up", "level-up", "level-up", "level-up", "level-up", "level-up", "level-up", "level-up", "level-up", "level-up", "level-up", "level-up", "level-up", "level-up", "level-up", "level-up", "level-up", "level-up", "level-up", "level-up", "level-up", "level-up", "level-up", "level-up", "level-up", "level-up", "level-up", "level-up", "level-up", "level-up", "level-up", "level-up", "level-up", "level-up", "level-up", "level-up", "level-up", "level-up", "level-up", "level-up", "level-up", "level-up", "level-up", "level-up", "level-up", "level-up", "level-up", "level-up", "level-up", "level-up", "level-up", "level-up", "level-up", "level-up", "level-up", "level-up", "level-up", "level-up", "level-up", "level-up", "level-up", "level-up", "level-up", "level-up", "level-up", "level-up", "level-up", "level-up", "level-up", "level-up", "level-up", "level-up", "level-up", "level-up", "level-up", "level-up", "level-up", "level-up", "level-up", "level-up", "level-up", "level-up", "level-up", "level-up", "level-up", "level-up", "level-up", "level-up", "level-up", "level-up", "level-up", "level-up", "level-up", "level-up", "level-up", "level-up", "level-up", "level-up", "level-up", "level-up", "level-up", "level-up", "level-up", "level-up", "level-up", "level-up", "level-up", "level-up", "level-up", "level-up", "level-up", "level-up", "level-up", "level-up", "level-up", "level-up", "level-up", "level-up", "level-up", "level-up", "level-up", "level-up", "level-up", "level-up", "level-up", "level-up", "level-up", "level-up", "level-up"],
+    "trade": ["trade", "trade", "trade", "trade", "trade", "trade", "trade", "trade", "trade", "trade", "trade", "trade", "trade", "trade", "trade", "trade", "trade", "trade", "trade", "trade"],
+    "use-item": ["use-item", "use-item", "use-item", "use-item", "use-item", "use-item", "use-item", "use-item", "use-item", "use-item", "use-item", "use-item", "use-item", "use-item", "use-item", "use-item", "use-item", "use-item", "use-item", "use-item", "use-item", "use-item", "use-item", "use-item", "use-item", "use-item", "use-item", "use-item", "use-item", "use-item", "use-item", "use-item", "use-item", "use-item", "use-item", "use-item"]
+  },
+  "group": ["trigger"]
+}</script>
+</div>
+</div>
+</div>
+<div class="cell-output-display html-fill-item html-fill-container">
+<div class="plotly html-widget html-fill-item html-fill-container" id="htmlwidget-caaf1367c25ca3336b15" style="width:100%;height:406px;"></div>
+<script type="application/json" data-for="htmlwidget-caaf1367c25ca3336b15">{"x":{"data":[{"x":[87,120,96,129,91,125,10,180,10,180,98,120,160,180,150,155,150,150,90,105,130,150,210,80,75,100,120,145,140,150,180,150,340,85,170,90,140,100,180,90,96,180,90,125,90,180,140,70,150,150,175,60,95,180,150,85,135,160,160,110,122,180,140,165,90,175,145,150,130,170,160,200,80,200,130,140,120,120,150,87,130,129,91,95,200,95,125,140,130,95,105,10,160,160,120,145,120,120,120,160,80,160,220,180,160,230,80,120,80,60,150,135,100,180,100,170,94,245,155,130,155,110,190,180,125,180,125,95,130,200,180,340,180,190,150,240,195,170,190,130,120,104,145,115,87,120,120,129,237,125,95,165,160,100,184,180,80,165,145,100,165,140,50,150,140,142,180,160,200,140,140,230,160,59,158,150,140,140,166,145,120,194,120,100,110,110,96,115,91,95,120,170,145,190,150,160,170,145,202,230,95,175,150,100,130,90,140,180,200,120,150,120,110,190,92,125,102,125,91,125,153,70,105,13,80,120,105,90,165,140,123,180,290,115,186,140,100,120,159,110,152,112,180,130,210,100,115,194,110,168,181,198,180,180,174,140,111,138,150,160,160,90,147,159,130,140,150,148,117],"y":[1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],"hoverinfo":"x","key":["level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up"],"type":"box","fillcolor":"rgba(104,144,240,0.7)","marker":{"opacity":null,"outliercolor":"rgba(0,0,0,1)","line":{"width":1.8897637795275593,"color":"rgba(0,0,0,1)"},"size":5.6692913385826778},"line":{"color":"rgba(104,144,240,1)","width":1.8897637795275593},"set":"trigger","showlegend":false,"xaxis":"x","yaxis":"y","orientation":"h","_isSimpleKey":true,"_isNestedKey":false,"frame":null},{"x":[70,140,190,50,125,100,180,121,139,120,90,20,45,100,95,115,50,165,95,100],"y":[2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2],"hoverinfo":"x","key":["trade","trade","trade","trade","trade","trade","trade","trade","trade","trade","trade","trade","trade","trade","trade","trade","trade","trade","trade","trade"],"type":"box","fillcolor":"rgba(120,200,80,0.7)","marker":{"opacity":null,"outliercolor":"rgba(0,0,0,1)","line":{"width":1.8897637795275593,"color":"rgba(0,0,0,1)"},"size":5.6692913385826778},"line":{"color":"rgba(120,200,80,1)","width":1.8897637795275593},"set":"trigger","showlegend":false,"xaxis":"x","yaxis":"y","orientation":"h","_isSimpleKey":true,"_isNestedKey":false,"frame":null},{"x":[155,205,175,150,120,130,130,182,245,240,140,90,175,110,180,140,195,115,182,105,100,220,200,200,181,195,150,180,170,206,85,60,182,140,192,150],"y":[3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3],"hoverinfo":"x","key":["use-item","use-item","use-item","use-item","use-item","use-item","use-item","use-item","use-item","use-item","use-item","use-item","use-item","use-item","use-item","use-item","use-item","use-item","use-item","use-item","use-item","use-item","use-item","use-item","use-item","use-item","use-item","use-item","use-item","use-item","use-item","use-item","use-item","use-item","use-item","use-item"],"type":"box","fillcolor":"rgba(240,128,48,0.7)","marker":{"opacity":null,"outliercolor":"rgba(0,0,0,1)","line":{"width":1.8897637795275593,"color":"rgba(0,0,0,1)"},"size":5.6692913385826778},"line":{"color":"rgba(240,128,48,1)","width":1.8897637795275593},"set":"trigger","showlegend":false,"xaxis":"x","yaxis":"y","orientation":"h","_isSimpleKey":true,"_isNestedKey":false,"frame":null},{"x":[87.252063382603225,119.89402741342784,95.939344409294421,128.97779204398392,90.985080100223428,125.37678354289383,9.8028764801099904,180.31477460712193,9.739289868436753,180.28307279180734,98.222990197502071,120.14690578226001,160.27275459151716,179.62933991588653,149.78415347393602,174.92031075116248,149.99941478595139,130.15412305686624,129.75977461170405,149.78731936104595,205.89829193037002,155.34247012808919,209.75785344988108,79.633582744933662,75.112351313233376,85.268319024704397,120.3526931958273,145.06651391647756,139.76160145122557,150.13549315780401,180.03217579647898,149.64482457917183,205.25727925803511,85.054823824763304,114.65107558127492,90.351928746886557,89.905716936290261,100.27127336636185,99.879854327626532,90.056168789230284,90.160507571510976,180.28785325195639,89.946447386406362,95.315325890108937,89.696233798749745,175.36172199752181,140.00490851532669,70.240265950001771,150.18376583158971,149.73077404927463,175.11977791786194,220.0424433093518,95.155100551806385,94.929319012910128,124.64361868258565,154.81324403770267,150.07175128590316,149.94720198381691,194.88839882649481,104.62739433068782,130.14128450993448,150.38023810237647,139.63438835591077,49.758305841870609,90.241139164566988,100.38981880117208,144.80075459834188,100.2010156121105,129.94955366458743,180.31792414821683,50.231835438124833,45.04551973976195,340.37863114774228,200.2817986175418,119.87388198059053,139.6512975331396,140.09452399220316,119.9748032707721,179.97906807325779,87.156219224072998,95.965387825854123,129.32307804245502,90.716853334195918,125.27668210659176,200.08556237127632,179.8013342430815,124.91741091385484,139.80916174016892,130.37819623034449,95.167348491400475,104.89225074537099,60.077528099901976,159.85361356306822,139.80071362648158,150.15622901543975,84.632327109947795,135.32621744722127,159.71542384121568,89.657339757494626,109.60890599153936,121.7647168783471,244.61235272921621,220.3478555034846,99.978129022754729,60.189263623021546,174.67453992236406,80.076634920947257,149.93848521374167,79.821587633341551,170.02533438131212,160.0118643021211,199.80083428230137,80.191925986669958,179.66440878808498,169.81684241276236,170.29029031731187,19.77892670147121,244.67080100588501,149.68358539696783,130.37938045505433,129.95903779454528,110.31101926714182,190.25530591513962,94.896153876744208,124.71322495806962,95.058415805175898,125.0899418214336,94.88718404769898,129.89611148182303,200.1678802875802,180.32072038725019,9.8703455444425341,179.87951400242747,179.84707012176514,120.0856363452971,139.86054203789681,119.86099940724671,139.941752570495,160.00753568485379,160.18460866697131,80.316947889141744,240.36944416146724,144.85466931201518,164.8021596685052,159.68656623996793,230.25079221148044,119.67569789867848,120.24449459966272,236.68166835643351,60.390363430045547,149.99874857682735,120.15921596866102,99.7557162815705,100.34702169075608,129.87693724930287,180.14749523121864,105.30203562900424,164.84015060476958,155.11795210614801,99.610676216892898,154.65603457558899,140.20721982475371,50.222525886259973,180.25343971457332,140.16699962932617,179.96074814852327,180.01565749272703,159.76700014565139,199.62110317889602,140.17189780175687,140.23848551586269,339.6165172951296,159.87212262656539,159.73723876345903,70.0068017238751,144.92309368364513,179.78841661680491,120.09374527912587,119.94730184301734,140.33519026637077,120.08863282632083,179.86509949620813,119.91765218358486,179.91287671644241,87.137147201970222,119.67875614091754,95.862551662139595,129.2306870855391,91.210090768337253,125.3235276222229,95.324119021184742,135.23122526016087,160.09282101821154,189.83806790877134,100.30935612302274,160.37569722216577,120.30155905559658,145.12025566156953,144.77971889413894,229.64027496371418,164.82208138182759,175.3144296642393,150.04192461464555,149.82148504611104,130.1944702848792,141.96594556774943,139.82340145204216,150.36093519702553,200.10632257554681,119.9618591312319,150.02098762355746,229.64060806185006,110.28991846330464,190.32695696447044,149.94942179322243,240.24994026552886,194.60765454676002,169.87487426288425,189.68043800536543,130.29201042093337,120.36963707990944,160.06231275200844,105.35486709754915,115.38900888375937,110.2048354241997,110.3906024998054,105.34886607099324,115.36016644537449,164.69471135567875,95.160179838165647,119.63986877426505,165.29335886165501,181.9920939195901,182.21021333429962,181.6665004486218,195.02744173966349,93.761426816321915,119.96779523659498,202.02077816501259,109.96910678781569,115.028331496194,112.06487199813128,179.91291234847159,100.0463918408379,99.817732029221958,90.086095470562583,115.16325486414135,69.762223287299278,110.04037317913026,99.736371096037331,114.96445295251905,199.65981415789574,199.76051162481309,59.072481941990553,157.60742298085242,149.73313557095827,140.3040116103366,140.24230292961002,165.76963451076298,144.95729505252092,180.37152108438312,170.05515190232546,100.22611494585871,100.2855235600844,79.988257082551712,120.12900339066982,167.85628590844573,90.223134925216442,139.7393591189757,139.93999945372343,180.28697232436389,169.77541886288674,144.89662568736821,152.97292429264635,184.14029686674476,139.77527673002334,79.807562370225781,129.88616478890179,109.97855740766973,150.30284217800946,95.344618023559448,149.74473773334176,89.995577110163865,130.3541087431833,180.2016176663339,190.37521218452602,159.66103441864252,180.06673957407475,150.22730215899645,160.07765282150359,140.0316502917558,120.3371678834781,179.63378625642508,190.07989518586547,92.022745447605843,124.71955086551607,102.25677528865636,125.25465318765491,90.84301736112684,125.28706864509732,186.01368063110857,104.10955144762993,117.25839734505863,12.789328317344189,197.92377106621862,137.89563718326389,181.15471725612878,180.60219892784954,146.60627005863935,111.05948497094214,122.76847956553101,120.96524385921657,139.36045919377358,193.64023577272891,194.19503722973167,174.04481243211777,170.28917213305832,192.14331542737781,159.02820435035974,159.25726984795182,151.89602560792119,147.73159048333764,164.63781392835079,210.0601066119969,290.09018904119728],"y":[1.0722222049487755,0.87923938722815365,0.89873700186144556,0.86290665741544215,0.9934848918812349,0.93851990811526775,1.109350276645273,0.91895777259487654,1.0844288959866391,1.127767337532714,1.0959027110598982,0.8677643770352006,0.94909296950791033,0.93524976363405588,0.9446705071022734,3.1477275007171555,2.9557294466067106,3.0160190194146708,3.0466340001672507,2.9817788088927046,2.874765734234825,3.0791913548251615,0.92617476738523696,1.1038974489551037,1.1235273157013581,3.1355656071798874,0.91045872834511099,1.10442729559727,1.1324609533185139,1.1272769707720727,0.97252379597630356,1.0481015532976017,3.0630267031956464,0.91675957539118824,3.1202788408845663,1.1355189104098826,1.8926419102819636,1.1211008603451773,1.8711510535096749,1.100541034573689,3.0229005018481985,0.93955077875871207,1.0335959738120437,1.8952604228397831,1.0230517151532694,3.1092597594251856,0.99741777654271568,1.0916764076799155,1.0137143354397267,1.1442376713035629,1.1400766822276638,3.0448691690107808,0.85649889814667401,2.0013117130845783,1.9543303322046994,1.1154735122807324,0.88179197800345721,1.0424355298746377,3.1006065088324251,1.0285165561363101,0.86816955613903701,0.9231514330022037,0.87598130633123217,2.0203944335691633,1.1107635936234146,1.0551810039207339,1.0100369852501898,2.0665081993909551,0.87229049913585188,3.0496400018222629,2.0222539840731768,2.1014350965619086,0.91175395415630189,0.94862291985191405,2.0179562566801907,1.0492264464031904,1.090056670899503,0.90635717562399809,0.91598796735052024,1.1344222279265523,0.96556521833408626,1.135658493754454,1.0361026297323406,1.0408776005497202,1.0824470762163401,1.0866066350601613,0.89929160368628802,0.92100585047155614,0.87789517834316944,1.1302199247293174,1.1349738370627165,0.90785269665066148,1.0184178161667661,3.0271919870981945,1.0419319604989141,0.9446821831632406,1.0222798930946737,0.96705219855066393,1.0116696028504522,1.0199709327425808,0.97749823841731998,3.0009289926616476,1.0283406310947611,3.0870149121154098,3.0532953024376184,0.97353357258252804,0.95496673868037762,1.0287044719094411,0.99306139803957194,0.97494459424633528,1.0691228966461495,0.9640261855907738,0.99170927237719297,0.91940439685713504,0.90210226222407075,0.85707392708864061,2.1017922796308994,0.94726141714490952,1.079240156360902,0.93810572943184523,0.99457148332148793,0.88230331775266679,0.98924237461760645,0.94751520392019306,0.86097634248435495,1.1404605167452246,0.99274628891143946,1.0399576619500295,1.0950172169832513,1.0245754996081815,1.1248014377662912,0.91286323058884589,1.032764420635067,0.87817663929890843,0.94509333479218183,3.0996787551557645,0.96922290401998912,3.1041035026079045,0.86193699471186846,1.0153360520955175,0.93082215390168133,2.9053682622034103,1.1033723597414791,0.93786341315135358,1.072398405824788,0.96298741179052738,0.9761206990340725,1.0866325394017622,1.0670371890533716,1.1096695005893706,1.0767558567924425,2.9347457470837979,0.97435747273266315,0.97718903992790729,1.0617500187829136,1.0578450764529408,3.0207164027262481,1.1485730653628707,0.97881672659423202,1.0318147588986903,1.1122206392697991,0.87529197854455565,1.0863760257838293,0.98105995620135222,1.1300827775849029,0.94366405371110884,0.93717975236941131,1.0996179985115304,1.1303883590037003,0.97645947439596059,1.1083908678032457,1.0732546526473015,1.0023737270385027,1.1213292174739764,2.0123740576673299,0.9634761317865923,3.107743920106441,1.0249640888301657,1.0653502132045105,2.0003742936067281,0.956829342013225,0.85440716634038838,0.99361891746520992,1.0430498402565718,1.14213185175322,0.99717388837598264,1.080087565165013,1.0857780585065484,0.99366583698429167,0.87014560922980311,1.0251063807168976,1.1496484049363063,0.93747656736522911,0.87764806090854108,1.0681766740744933,1.0085515999700874,1.00353885111399,1.0612494785571471,1.0729494607774541,1.1014807441271841,1.051045513432473,1.1071506017819046,1.0620290654711426,0.98123399447649717,1.1301562687149271,0.96257753267418589,0.8727045241510496,1.1338640206260606,1.0867337286705152,0.98445001617074013,0.91238351527135819,1.0391906992997975,0.92997360760346059,0.95695202611386776,1.1205825492274015,0.86322428984567523,0.95344816714059566,0.93522652124520389,1.0015387629158794,0.95579629982821646,0.87945461382623757,1.0544458773452789,1.0343017424922436,1.0280888075008989,1.1249050383688881,0.96462405466008927,0.90460764870513233,0.94616054852958764,1.043370103277266,0.85408543697558348,1.0179252038244158,1.0853129094699399,3.1213445049477739,2.9936130358837545,2.919057644228451,3.0866296790074559,1.0571697029285132,1.0821779653662815,1.1213126139016822,1.121376224863343,1.9837823374429717,0.86062122038565581,1.1334095591446385,1.0312680887291208,2.1177933090366423,1.1424924069317057,0.93324219961650667,1.1354808052303269,1.0355337104294449,1.0836791920242832,0.97754350223112851,2.907721232715994,3.0550034775864332,0.88664129797834901,0.88719572441186756,0.89676538831554353,0.86105380509980023,1.0274708648910746,0.90454740293789659,1.1220347473397851,0.92430346999317403,3.111348689091392,1.0607596370624379,0.87096060793846841,0.9141057491768152,1.1459634237922729,0.85146258168388156,0.98448879714123905,1.0889971386175603,0.93117972470354293,2.0567770301131532,1.0901935781817884,0.9232780528254807,1.1140787376090884,1.1259039066266268,0.94814466158859434,1.1336249454878271,0.95711710287723695,2.9884494256228207,1.1085708016296849,0.89030766508076342,3.0745161850936711,0.98476863137912007,1.0270090556936338,0.86014261029195038,1.9295514418743551,0.97969403769820929,1.0328896920196713,1.067841066652909,1.1017660956829787,1.1203157848212868,0.88199476341251282,1.0886923914775253,0.94705612519755955,1.1307112623937428,1.1080715082818642,1.112134507810697,0.98177834097296002,0.93508125154767185,0.9093595455400646,0.85819359463639555,1.0460963916731998,0.91476470108609642,1.0930545532843099,1.057125549716875,0.9735369967995211,3.0175203467952088,0.9610006956616417,1.0887095075333491,0.88122853746172036,1.1018612502608449,2.0377142197219653,2.1015988945262505,1.0900952446274459,1.003268181788735,0.97285883349832147,1.0141239343909547,3.0060389686608686,1.1194648168515413,1.0940076153492555,1.0446181237464771,0.85034235597122465,2.0080649081850424,0.93497328292578463,1.1118952254997567],"text":["total_gain:  87","total_gain: 120","total_gain:  96","total_gain: 129","total_gain:  91","total_gain: 125","total_gain:  10","total_gain: 180","total_gain:  10","total_gain: 180","total_gain:  98","total_gain: 120","total_gain: 160","total_gain: 180","total_gain: 150","total_gain: 175","total_gain: 150","total_gain: 130","total_gain: 130","total_gain: 150","total_gain: 206","total_gain: 155","total_gain: 210","total_gain:  80","total_gain:  75","total_gain:  85","total_gain: 120","total_gain: 145","total_gain: 140","total_gain: 150","total_gain: 180","total_gain: 150","total_gain: 205","total_gain:  85","total_gain: 115","total_gain:  90","total_gain:  90","total_gain: 100","total_gain: 100","total_gain:  90","total_gain:  90","total_gain: 180","total_gain:  90","total_gain:  95","total_gain:  90","total_gain: 175","total_gain: 140","total_gain:  70","total_gain: 150","total_gain: 150","total_gain: 175","total_gain: 220","total_gain:  95","total_gain:  95","total_gain: 125","total_gain: 155","total_gain: 150","total_gain: 150","total_gain: 195","total_gain: 105","total_gain: 130","total_gain: 150","total_gain: 140","total_gain:  50","total_gain:  90","total_gain: 100","total_gain: 145","total_gain: 100","total_gain: 130","total_gain: 180","total_gain:  50","total_gain:  45","total_gain: 340","total_gain: 200","total_gain: 120","total_gain: 140","total_gain: 140","total_gain: 120","total_gain: 180","total_gain:  87","total_gain:  96","total_gain: 129","total_gain:  91","total_gain: 125","total_gain: 200","total_gain: 180","total_gain: 125","total_gain: 140","total_gain: 130","total_gain:  95","total_gain: 105","total_gain:  60","total_gain: 160","total_gain: 140","total_gain: 150","total_gain:  85","total_gain: 135","total_gain: 160","total_gain:  90","total_gain: 110","total_gain: 122","total_gain: 245","total_gain: 220","total_gain: 100","total_gain:  60","total_gain: 175","total_gain:  80","total_gain: 150","total_gain:  80","total_gain: 170","total_gain: 160","total_gain: 200","total_gain:  80","total_gain: 180","total_gain: 170","total_gain: 170","total_gain:  20","total_gain: 245","total_gain: 150","total_gain: 130","total_gain: 130","total_gain: 110","total_gain: 190","total_gain:  95","total_gain: 125","total_gain:  95","total_gain: 125","total_gain:  95","total_gain: 130","total_gain: 200","total_gain: 180","total_gain:  10","total_gain: 180","total_gain: 180","total_gain: 120","total_gain: 140","total_gain: 120","total_gain: 140","total_gain: 160","total_gain: 160","total_gain:  80","total_gain: 240","total_gain: 145","total_gain: 165","total_gain: 160","total_gain: 230","total_gain: 120","total_gain: 120","total_gain: 237","total_gain:  60","total_gain: 150","total_gain: 120","total_gain: 100","total_gain: 100","total_gain: 130","total_gain: 180","total_gain: 105","total_gain: 165","total_gain: 155","total_gain: 100","total_gain: 155","total_gain: 140","total_gain:  50","total_gain: 180","total_gain: 140","total_gain: 180","total_gain: 180","total_gain: 160","total_gain: 200","total_gain: 140","total_gain: 140","total_gain: 340","total_gain: 160","total_gain: 160","total_gain:  70","total_gain: 145","total_gain: 180","total_gain: 120","total_gain: 120","total_gain: 140","total_gain: 120","total_gain: 180","total_gain: 120","total_gain: 180","total_gain:  87","total_gain: 120","total_gain:  96","total_gain: 129","total_gain:  91","total_gain: 125","total_gain:  95","total_gain: 135","total_gain: 160","total_gain: 190","total_gain: 100","total_gain: 160","total_gain: 120","total_gain: 145","total_gain: 145","total_gain: 230","total_gain: 165","total_gain: 175","total_gain: 150","total_gain: 150","total_gain: 130","total_gain: 142","total_gain: 140","total_gain: 150","total_gain: 200","total_gain: 120","total_gain: 150","total_gain: 230","total_gain: 110","total_gain: 190","total_gain: 150","total_gain: 240","total_gain: 195","total_gain: 170","total_gain: 190","total_gain: 130","total_gain: 120","total_gain: 160","total_gain: 105","total_gain: 115","total_gain: 110","total_gain: 110","total_gain: 105","total_gain: 115","total_gain: 165","total_gain:  95","total_gain: 120","total_gain: 165","total_gain: 182","total_gain: 182","total_gain: 182","total_gain: 195","total_gain:  94","total_gain: 120","total_gain: 202","total_gain: 110","total_gain: 115","total_gain: 112","total_gain: 180","total_gain: 100","total_gain: 100","total_gain:  90","total_gain: 115","total_gain:  70","total_gain: 110","total_gain: 100","total_gain: 115","total_gain: 200","total_gain: 200","total_gain:  59","total_gain: 158","total_gain: 150","total_gain: 140","total_gain: 140","total_gain: 166","total_gain: 145","total_gain: 180","total_gain: 170","total_gain: 100","total_gain: 100","total_gain:  80","total_gain: 120","total_gain: 168","total_gain:  90","total_gain: 140","total_gain: 140","total_gain: 180","total_gain: 170","total_gain: 145","total_gain: 153","total_gain: 184","total_gain: 140","total_gain:  80","total_gain: 130","total_gain: 110","total_gain: 150","total_gain:  95","total_gain: 150","total_gain:  90","total_gain: 130","total_gain: 180","total_gain: 190","total_gain: 160","total_gain: 180","total_gain: 150","total_gain: 160","total_gain: 140","total_gain: 120","total_gain: 180","total_gain: 190","total_gain:  92","total_gain: 125","total_gain: 102","total_gain: 125","total_gain:  91","total_gain: 125","total_gain: 186","total_gain: 104","total_gain: 117","total_gain:  13","total_gain: 198","total_gain: 138","total_gain: 181","total_gain: 181","total_gain: 147","total_gain: 111","total_gain: 123","total_gain: 121","total_gain: 139","total_gain: 194","total_gain: 194","total_gain: 174","total_gain: 170","total_gain: 192","total_gain: 159","total_gain: 159","total_gain: 152","total_gain: 148","total_gain: 165","total_gain: 210","total_gain: 290"],"key":["level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","use-item","use-item","use-item","use-item","use-item","use-item","use-item","level-up","level-up","level-up","use-item","level-up","level-up","level-up","level-up","level-up","level-up","use-item","level-up","use-item","level-up","trade","level-up","trade","level-up","use-item","level-up","level-up","trade","level-up","use-item","level-up","level-up","level-up","level-up","level-up","use-item","level-up","trade","trade","level-up","level-up","level-up","use-item","level-up","level-up","level-up","level-up","trade","level-up","level-up","level-up","trade","level-up","use-item","trade","trade","level-up","level-up","trade","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","use-item","level-up","level-up","level-up","level-up","level-up","level-up","level-up","use-item","level-up","use-item","use-item","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","trade","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","use-item","level-up","use-item","level-up","level-up","level-up","use-item","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","use-item","level-up","level-up","level-up","level-up","use-item","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","trade","level-up","use-item","level-up","level-up","trade","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","use-item","use-item","use-item","use-item","level-up","level-up","level-up","level-up","trade","level-up","level-up","level-up","trade","level-up","level-up","level-up","level-up","level-up","level-up","use-item","use-item","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","use-item","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","trade","level-up","level-up","level-up","level-up","level-up","level-up","level-up","use-item","level-up","level-up","use-item","level-up","level-up","level-up","trade","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","use-item","level-up","level-up","level-up","level-up","trade","trade","level-up","level-up","level-up","level-up","use-item","level-up","level-up","level-up","level-up","trade","level-up","level-up"],"type":"scatter","mode":"markers","marker":{"autocolorscale":false,"color":["rgba(104,144,240,1)","rgba(104,144,240,1)","rgba(104,144,240,1)","rgba(104,144,240,1)","rgba(104,144,240,1)","rgba(104,144,240,1)","rgba(104,144,240,1)","rgba(104,144,240,1)","rgba(104,144,240,1)","rgba(104,144,240,1)","rgba(104,144,240,1)","rgba(104,144,240,1)","rgba(104,144,240,1)","rgba(104,144,240,1)","rgba(104,144,240,1)","rgba(240,128,48,1)","rgba(240,128,48,1)","rgba(240,128,48,1)","rgba(240,128,48,1)","rgba(240,128,48,1)","rgba(240,128,48,1)","rgba(240,128,48,1)","rgba(104,144,240,1)","rgba(104,144,240,1)","rgba(104,144,240,1)","rgba(240,128,48,1)","rgba(104,144,240,1)","rgba(104,144,240,1)","rgba(104,144,240,1)","rgba(104,144,240,1)","rgba(104,144,240,1)","rgba(104,144,240,1)","rgba(240,128,48,1)","rgba(104,144,240,1)","rgba(240,128,48,1)","rgba(104,144,240,1)","rgba(120,200,80,1)","rgba(104,144,240,1)","rgba(120,200,80,1)","rgba(104,144,240,1)","rgba(240,128,48,1)","rgba(104,144,240,1)","rgba(104,144,240,1)","rgba(120,200,80,1)","rgba(104,144,240,1)","rgba(240,128,48,1)","rgba(104,144,240,1)","rgba(104,144,240,1)","rgba(104,144,240,1)","rgba(104,144,240,1)","rgba(104,144,240,1)","rgba(240,128,48,1)","rgba(104,144,240,1)","rgba(120,200,80,1)","rgba(120,200,80,1)","rgba(104,144,240,1)","rgba(104,144,240,1)","rgba(104,144,240,1)","rgba(240,128,48,1)","rgba(104,144,240,1)","rgba(104,144,240,1)","rgba(104,144,240,1)","rgba(104,144,240,1)","rgba(120,200,80,1)","rgba(104,144,240,1)","rgba(104,144,240,1)","rgba(104,144,240,1)","rgba(120,200,80,1)","rgba(104,144,240,1)","rgba(240,128,48,1)","rgba(120,200,80,1)","rgba(120,200,80,1)","rgba(104,144,240,1)","rgba(104,144,240,1)","rgba(120,200,80,1)","rgba(104,144,240,1)","rgba(104,144,240,1)","rgba(104,144,240,1)","rgba(104,144,240,1)","rgba(104,144,240,1)","rgba(104,144,240,1)","rgba(104,144,240,1)","rgba(104,144,240,1)","rgba(104,144,240,1)","rgba(104,144,240,1)","rgba(104,144,240,1)","rgba(104,144,240,1)","rgba(104,144,240,1)","rgba(104,144,240,1)","rgba(104,144,240,1)","rgba(104,144,240,1)","rgba(104,144,240,1)","rgba(104,144,240,1)","rgba(240,128,48,1)","rgba(104,144,240,1)","rgba(104,144,240,1)","rgba(104,144,240,1)","rgba(104,144,240,1)","rgba(104,144,240,1)","rgba(104,144,240,1)","rgba(104,144,240,1)","rgba(240,128,48,1)","rgba(104,144,240,1)","rgba(240,128,48,1)","rgba(240,128,48,1)","rgba(104,144,240,1)","rgba(104,144,240,1)","rgba(104,144,240,1)","rgba(104,144,240,1)","rgba(104,144,240,1)","rgba(104,144,240,1)","rgba(104,144,240,1)","rgba(104,144,240,1)","rgba(104,144,240,1)","rgba(104,144,240,1)","rgba(104,144,240,1)","rgba(120,200,80,1)","rgba(104,144,240,1)","rgba(104,144,240,1)","rgba(104,144,240,1)","rgba(104,144,240,1)","rgba(104,144,240,1)","rgba(104,144,240,1)","rgba(104,144,240,1)","rgba(104,144,240,1)","rgba(104,144,240,1)","rgba(104,144,240,1)","rgba(104,144,240,1)","rgba(104,144,240,1)","rgba(104,144,240,1)","rgba(104,144,240,1)","rgba(104,144,240,1)","rgba(104,144,240,1)","rgba(104,144,240,1)","rgba(104,144,240,1)","rgba(240,128,48,1)","rgba(104,144,240,1)","rgba(240,128,48,1)","rgba(104,144,240,1)","rgba(104,144,240,1)","rgba(104,144,240,1)","rgba(240,128,48,1)","rgba(104,144,240,1)","rgba(104,144,240,1)","rgba(104,144,240,1)","rgba(104,144,240,1)","rgba(104,144,240,1)","rgba(104,144,240,1)","rgba(104,144,240,1)","rgba(104,144,240,1)","rgba(104,144,240,1)","rgba(240,128,48,1)","rgba(104,144,240,1)","rgba(104,144,240,1)","rgba(104,144,240,1)","rgba(104,144,240,1)","rgba(240,128,48,1)","rgba(104,144,240,1)","rgba(104,144,240,1)","rgba(104,144,240,1)","rgba(104,144,240,1)","rgba(104,144,240,1)","rgba(104,144,240,1)","rgba(104,144,240,1)","rgba(104,144,240,1)","rgba(104,144,240,1)","rgba(104,144,240,1)","rgba(104,144,240,1)","rgba(104,144,240,1)","rgba(104,144,240,1)","rgba(104,144,240,1)","rgba(104,144,240,1)","rgba(104,144,240,1)","rgba(104,144,240,1)","rgba(120,200,80,1)","rgba(104,144,240,1)","rgba(240,128,48,1)","rgba(104,144,240,1)","rgba(104,144,240,1)","rgba(120,200,80,1)","rgba(104,144,240,1)","rgba(104,144,240,1)","rgba(104,144,240,1)","rgba(104,144,240,1)","rgba(104,144,240,1)","rgba(104,144,240,1)","rgba(104,144,240,1)","rgba(104,144,240,1)","rgba(104,144,240,1)","rgba(104,144,240,1)","rgba(104,144,240,1)","rgba(104,144,240,1)","rgba(104,144,240,1)","rgba(104,144,240,1)","rgba(104,144,240,1)","rgba(104,144,240,1)","rgba(104,144,240,1)","rgba(104,144,240,1)","rgba(104,144,240,1)","rgba(104,144,240,1)","rgba(104,144,240,1)","rgba(104,144,240,1)","rgba(104,144,240,1)","rgba(104,144,240,1)","rgba(104,144,240,1)","rgba(104,144,240,1)","rgba(104,144,240,1)","rgba(104,144,240,1)","rgba(104,144,240,1)","rgba(104,144,240,1)","rgba(104,144,240,1)","rgba(104,144,240,1)","rgba(104,144,240,1)","rgba(104,144,240,1)","rgba(104,144,240,1)","rgba(104,144,240,1)","rgba(104,144,240,1)","rgba(104,144,240,1)","rgba(104,144,240,1)","rgba(104,144,240,1)","rgba(104,144,240,1)","rgba(104,144,240,1)","rgba(104,144,240,1)","rgba(104,144,240,1)","rgba(104,144,240,1)","rgba(104,144,240,1)","rgba(104,144,240,1)","rgba(104,144,240,1)","rgba(104,144,240,1)","rgba(104,144,240,1)","rgba(104,144,240,1)","rgba(104,144,240,1)","rgba(240,128,48,1)","rgba(240,128,48,1)","rgba(240,128,48,1)","rgba(240,128,48,1)","rgba(104,144,240,1)","rgba(104,144,240,1)","rgba(104,144,240,1)","rgba(104,144,240,1)","rgba(120,200,80,1)","rgba(104,144,240,1)","rgba(104,144,240,1)","rgba(104,144,240,1)","rgba(120,200,80,1)","rgba(104,144,240,1)","rgba(104,144,240,1)","rgba(104,144,240,1)","rgba(104,144,240,1)","rgba(104,144,240,1)","rgba(104,144,240,1)","rgba(240,128,48,1)","rgba(240,128,48,1)","rgba(104,144,240,1)","rgba(104,144,240,1)","rgba(104,144,240,1)","rgba(104,144,240,1)","rgba(104,144,240,1)","rgba(104,144,240,1)","rgba(104,144,240,1)","rgba(104,144,240,1)","rgba(240,128,48,1)","rgba(104,144,240,1)","rgba(104,144,240,1)","rgba(104,144,240,1)","rgba(104,144,240,1)","rgba(104,144,240,1)","rgba(104,144,240,1)","rgba(104,144,240,1)","rgba(104,144,240,1)","rgba(120,200,80,1)","rgba(104,144,240,1)","rgba(104,144,240,1)","rgba(104,144,240,1)","rgba(104,144,240,1)","rgba(104,144,240,1)","rgba(104,144,240,1)","rgba(104,144,240,1)","rgba(240,128,48,1)","rgba(104,144,240,1)","rgba(104,144,240,1)","rgba(240,128,48,1)","rgba(104,144,240,1)","rgba(104,144,240,1)","rgba(104,144,240,1)","rgba(120,200,80,1)","rgba(104,144,240,1)","rgba(104,144,240,1)","rgba(104,144,240,1)","rgba(104,144,240,1)","rgba(104,144,240,1)","rgba(104,144,240,1)","rgba(104,144,240,1)","rgba(104,144,240,1)","rgba(104,144,240,1)","rgba(104,144,240,1)","rgba(104,144,240,1)","rgba(104,144,240,1)","rgba(104,144,240,1)","rgba(104,144,240,1)","rgba(104,144,240,1)","rgba(104,144,240,1)","rgba(104,144,240,1)","rgba(104,144,240,1)","rgba(104,144,240,1)","rgba(104,144,240,1)","rgba(240,128,48,1)","rgba(104,144,240,1)","rgba(104,144,240,1)","rgba(104,144,240,1)","rgba(104,144,240,1)","rgba(120,200,80,1)","rgba(120,200,80,1)","rgba(104,144,240,1)","rgba(104,144,240,1)","rgba(104,144,240,1)","rgba(104,144,240,1)","rgba(240,128,48,1)","rgba(104,144,240,1)","rgba(104,144,240,1)","rgba(104,144,240,1)","rgba(104,144,240,1)","rgba(120,200,80,1)","rgba(104,144,240,1)","rgba(104,144,240,1)"],"opacity":0.40000000000000002,"size":6.8031496062992138,"symbol":"circle","line":{"width":1.8897637795275593,"color":["rgba(104,144,240,1)","rgba(104,144,240,1)","rgba(104,144,240,1)","rgba(104,144,240,1)","rgba(104,144,240,1)","rgba(104,144,240,1)","rgba(104,144,240,1)","rgba(104,144,240,1)","rgba(104,144,240,1)","rgba(104,144,240,1)","rgba(104,144,240,1)","rgba(104,144,240,1)","rgba(104,144,240,1)","rgba(104,144,240,1)","rgba(104,144,240,1)","rgba(240,128,48,1)","rgba(240,128,48,1)","rgba(240,128,48,1)","rgba(240,128,48,1)","rgba(240,128,48,1)","rgba(240,128,48,1)","rgba(240,128,48,1)","rgba(104,144,240,1)","rgba(104,144,240,1)","rgba(104,144,240,1)","rgba(240,128,48,1)","rgba(104,144,240,1)","rgba(104,144,240,1)","rgba(104,144,240,1)","rgba(104,144,240,1)","rgba(104,144,240,1)","rgba(104,144,240,1)","rgba(240,128,48,1)","rgba(104,144,240,1)","rgba(240,128,48,1)","rgba(104,144,240,1)","rgba(120,200,80,1)","rgba(104,144,240,1)","rgba(120,200,80,1)","rgba(104,144,240,1)","rgba(240,128,48,1)","rgba(104,144,240,1)","rgba(104,144,240,1)","rgba(120,200,80,1)","rgba(104,144,240,1)","rgba(240,128,48,1)","rgba(104,144,240,1)","rgba(104,144,240,1)","rgba(104,144,240,1)","rgba(104,144,240,1)","rgba(104,144,240,1)","rgba(240,128,48,1)","rgba(104,144,240,1)","rgba(120,200,80,1)","rgba(120,200,80,1)","rgba(104,144,240,1)","rgba(104,144,240,1)","rgba(104,144,240,1)","rgba(240,128,48,1)","rgba(104,144,240,1)","rgba(104,144,240,1)","rgba(104,144,240,1)","rgba(104,144,240,1)","rgba(120,200,80,1)","rgba(104,144,240,1)","rgba(104,144,240,1)","rgba(104,144,240,1)","rgba(120,200,80,1)","rgba(104,144,240,1)","rgba(240,128,48,1)","rgba(120,200,80,1)","rgba(120,200,80,1)","rgba(104,144,240,1)","rgba(104,144,240,1)","rgba(120,200,80,1)","rgba(104,144,240,1)","rgba(104,144,240,1)","rgba(104,144,240,1)","rgba(104,144,240,1)","rgba(104,144,240,1)","rgba(104,144,240,1)","rgba(104,144,240,1)","rgba(104,144,240,1)","rgba(104,144,240,1)","rgba(104,144,240,1)","rgba(104,144,240,1)","rgba(104,144,240,1)","rgba(104,144,240,1)","rgba(104,144,240,1)","rgba(104,144,240,1)","rgba(104,144,240,1)","rgba(104,144,240,1)","rgba(104,144,240,1)","rgba(240,128,48,1)","rgba(104,144,240,1)","rgba(104,144,240,1)","rgba(104,144,240,1)","rgba(104,144,240,1)","rgba(104,144,240,1)","rgba(104,144,240,1)","rgba(104,144,240,1)","rgba(240,128,48,1)","rgba(104,144,240,1)","rgba(240,128,48,1)","rgba(240,128,48,1)","rgba(104,144,240,1)","rgba(104,144,240,1)","rgba(104,144,240,1)","rgba(104,144,240,1)","rgba(104,144,240,1)","rgba(104,144,240,1)","rgba(104,144,240,1)","rgba(104,144,240,1)","rgba(104,144,240,1)","rgba(104,144,240,1)","rgba(104,144,240,1)","rgba(120,200,80,1)","rgba(104,144,240,1)","rgba(104,144,240,1)","rgba(104,144,240,1)","rgba(104,144,240,1)","rgba(104,144,240,1)","rgba(104,144,240,1)","rgba(104,144,240,1)","rgba(104,144,240,1)","rgba(104,144,240,1)","rgba(104,144,240,1)","rgba(104,144,240,1)","rgba(104,144,240,1)","rgba(104,144,240,1)","rgba(104,144,240,1)","rgba(104,144,240,1)","rgba(104,144,240,1)","rgba(104,144,240,1)","rgba(104,144,240,1)","rgba(240,128,48,1)","rgba(104,144,240,1)","rgba(240,128,48,1)","rgba(104,144,240,1)","rgba(104,144,240,1)","rgba(104,144,240,1)","rgba(240,128,48,1)","rgba(104,144,240,1)","rgba(104,144,240,1)","rgba(104,144,240,1)","rgba(104,144,240,1)","rgba(104,144,240,1)","rgba(104,144,240,1)","rgba(104,144,240,1)","rgba(104,144,240,1)","rgba(104,144,240,1)","rgba(240,128,48,1)","rgba(104,144,240,1)","rgba(104,144,240,1)","rgba(104,144,240,1)","rgba(104,144,240,1)","rgba(240,128,48,1)","rgba(104,144,240,1)","rgba(104,144,240,1)","rgba(104,144,240,1)","rgba(104,144,240,1)","rgba(104,144,240,1)","rgba(104,144,240,1)","rgba(104,144,240,1)","rgba(104,144,240,1)","rgba(104,144,240,1)","rgba(104,144,240,1)","rgba(104,144,240,1)","rgba(104,144,240,1)","rgba(104,144,240,1)","rgba(104,144,240,1)","rgba(104,144,240,1)","rgba(104,144,240,1)","rgba(104,144,240,1)","rgba(120,200,80,1)","rgba(104,144,240,1)","rgba(240,128,48,1)","rgba(104,144,240,1)","rgba(104,144,240,1)","rgba(120,200,80,1)","rgba(104,144,240,1)","rgba(104,144,240,1)","rgba(104,144,240,1)","rgba(104,144,240,1)","rgba(104,144,240,1)","rgba(104,144,240,1)","rgba(104,144,240,1)","rgba(104,144,240,1)","rgba(104,144,240,1)","rgba(104,144,240,1)","rgba(104,144,240,1)","rgba(104,144,240,1)","rgba(104,144,240,1)","rgba(104,144,240,1)","rgba(104,144,240,1)","rgba(104,144,240,1)","rgba(104,144,240,1)","rgba(104,144,240,1)","rgba(104,144,240,1)","rgba(104,144,240,1)","rgba(104,144,240,1)","rgba(104,144,240,1)","rgba(104,144,240,1)","rgba(104,144,240,1)","rgba(104,144,240,1)","rgba(104,144,240,1)","rgba(104,144,240,1)","rgba(104,144,240,1)","rgba(104,144,240,1)","rgba(104,144,240,1)","rgba(104,144,240,1)","rgba(104,144,240,1)","rgba(104,144,240,1)","rgba(104,144,240,1)","rgba(104,144,240,1)","rgba(104,144,240,1)","rgba(104,144,240,1)","rgba(104,144,240,1)","rgba(104,144,240,1)","rgba(104,144,240,1)","rgba(104,144,240,1)","rgba(104,144,240,1)","rgba(104,144,240,1)","rgba(104,144,240,1)","rgba(104,144,240,1)","rgba(104,144,240,1)","rgba(104,144,240,1)","rgba(104,144,240,1)","rgba(104,144,240,1)","rgba(104,144,240,1)","rgba(104,144,240,1)","rgba(104,144,240,1)","rgba(240,128,48,1)","rgba(240,128,48,1)","rgba(240,128,48,1)","rgba(240,128,48,1)","rgba(104,144,240,1)","rgba(104,144,240,1)","rgba(104,144,240,1)","rgba(104,144,240,1)","rgba(120,200,80,1)","rgba(104,144,240,1)","rgba(104,144,240,1)","rgba(104,144,240,1)","rgba(120,200,80,1)","rgba(104,144,240,1)","rgba(104,144,240,1)","rgba(104,144,240,1)","rgba(104,144,240,1)","rgba(104,144,240,1)","rgba(104,144,240,1)","rgba(240,128,48,1)","rgba(240,128,48,1)","rgba(104,144,240,1)","rgba(104,144,240,1)","rgba(104,144,240,1)","rgba(104,144,240,1)","rgba(104,144,240,1)","rgba(104,144,240,1)","rgba(104,144,240,1)","rgba(104,144,240,1)","rgba(240,128,48,1)","rgba(104,144,240,1)","rgba(104,144,240,1)","rgba(104,144,240,1)","rgba(104,144,240,1)","rgba(104,144,240,1)","rgba(104,144,240,1)","rgba(104,144,240,1)","rgba(104,144,240,1)","rgba(120,200,80,1)","rgba(104,144,240,1)","rgba(104,144,240,1)","rgba(104,144,240,1)","rgba(104,144,240,1)","rgba(104,144,240,1)","rgba(104,144,240,1)","rgba(104,144,240,1)","rgba(240,128,48,1)","rgba(104,144,240,1)","rgba(104,144,240,1)","rgba(240,128,48,1)","rgba(104,144,240,1)","rgba(104,144,240,1)","rgba(104,144,240,1)","rgba(120,200,80,1)","rgba(104,144,240,1)","rgba(104,144,240,1)","rgba(104,144,240,1)","rgba(104,144,240,1)","rgba(104,144,240,1)","rgba(104,144,240,1)","rgba(104,144,240,1)","rgba(104,144,240,1)","rgba(104,144,240,1)","rgba(104,144,240,1)","rgba(104,144,240,1)","rgba(104,144,240,1)","rgba(104,144,240,1)","rgba(104,144,240,1)","rgba(104,144,240,1)","rgba(104,144,240,1)","rgba(104,144,240,1)","rgba(104,144,240,1)","rgba(104,144,240,1)","rgba(104,144,240,1)","rgba(240,128,48,1)","rgba(104,144,240,1)","rgba(104,144,240,1)","rgba(104,144,240,1)","rgba(104,144,240,1)","rgba(120,200,80,1)","rgba(120,200,80,1)","rgba(104,144,240,1)","rgba(104,144,240,1)","rgba(104,144,240,1)","rgba(104,144,240,1)","rgba(240,128,48,1)","rgba(104,144,240,1)","rgba(104,144,240,1)","rgba(104,144,240,1)","rgba(104,144,240,1)","rgba(120,200,80,1)","rgba(104,144,240,1)","rgba(104,144,240,1)"]}},"hoveron":"points","set":"trigger","showlegend":false,"xaxis":"x","yaxis":"y","hoverinfo":"text","_isNestedKey":false,"frame":null},{"x":[138.81784386617102,105.5,160.41666666666666],"y":[1,2,3],"text":["total_gain: 138.8178","total_gain: 105.5000","total_gain: 160.4167"],"key":[["level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up","level-up"],["trade","trade","trade","trade","trade","trade","trade","trade","trade","trade","trade","trade","trade","trade","trade","trade","trade","trade","trade","trade"],["use-item","use-item","use-item","use-item","use-item","use-item","use-item","use-item","use-item","use-item","use-item","use-item","use-item","use-item","use-item","use-item","use-item","use-item","use-item","use-item","use-item","use-item","use-item","use-item","use-item","use-item","use-item","use-item","use-item","use-item","use-item","use-item","use-item","use-item","use-item","use-item"]],"type":"scatter","mode":"markers","marker":{"autocolorscale":false,"color":"rgba(255,255,255,1)","opacity":1,"size":11.338582677165356,"symbol":"diamond","line":{"width":1.8897637795275593,"color":"rgba(77,77,77,1)"}},"hoveron":"points","set":"trigger","showlegend":false,"xaxis":"x","yaxis":"y","hoverinfo":"text","_isNestedKey":true,"frame":null}],"layout":{"margin":{"t":24.634288086342885,"r":8.6342880863428828,"b":46.160232461602327,"l":76.712328767123296},"paper_bgcolor":"rgba(255,255,255,1)","font":{"color":"rgba(0,0,0,1)","family":"","size":17.268576172685762},"xaxis":{"domain":[0,1],"automargin":true,"type":"linear","autorange":false,"range":[-6.7926771955285261,356.91059821170757],"tickmode":"array","ticktext":["0","100","200","300"],"tickvals":[0,100.00000000000001,200,300],"categoryorder":"array","categoryarray":["0","100","200","300"],"nticks":null,"ticks":"","tickcolor":null,"ticklen":4.3171440431714405,"tickwidth":0,"showticklabels":true,"tickfont":{"color":"rgba(102,102,102,1)","family":"","size":15.940224159402241},"tickangle":-0,"showline":false,"linecolor":null,"linewidth":0,"showgrid":true,"gridcolor":"rgba(235,235,235,1)","gridwidth":0.5313408053134081,"zeroline":false,"anchor":"y","title":{"text":"Total stat gain","font":{"color":"rgba(0,0,0,1)","family":"","size":17.268576172685762}},"hoverformat":".2f"},"yaxis":{"domain":[0,1],"automargin":true,"type":"linear","autorange":false,"range":[0.40000000000000002,3.6000000000000001],"tickmode":"array","ticktext":["level-up","trade","use-item"],"tickvals":[1,2,3],"categoryorder":"array","categoryarray":["level-up","trade","use-item"],"nticks":null,"ticks":"","tickcolor":null,"ticklen":4.3171440431714414,"tickwidth":0,"showticklabels":true,"tickfont":{"color":"rgba(102,102,102,1)","family":"","size":15.940224159402243},"tickangle":-0,"showline":false,"linecolor":null,"linewidth":0,"showgrid":false,"gridcolor":null,"gridwidth":0,"zeroline":false,"anchor":"x","title":{"text":"","font":{"color":"rgba(0,0,0,1)","family":"","size":17.268576172685762}},"hoverformat":".2f"},"shapes":[],"showlegend":false,"legend":{"bgcolor":null,"bordercolor":null,"borderwidth":0,"font":{"color":"rgba(0,0,0,1)","family":"","size":13.814860938148611},"title":{"text":"","font":{"color":"rgba(0,0,0,1)","family":"","size":17.268576172685762}}},"hovermode":"closest","barmode":"relative","dragmode":"zoom"},"config":{"doubleClick":"reset","modeBarButtonsToAdd":["hoverclosest","hovercompare"],"showSendToCloud":false},"source":"A","attrs":{"39f24755e08a":{"x":{},"y":{},"fill":{},"colour":{},"type":"box"},"39f25708a89c":{"x":{},"y":{},"fill":{},"colour":{}},"39f27975c667":{"x":{},"y":{},"fill":{},"colour":{}}},"cur_data":"39f24755e08a","visdat":{"39f24755e08a":["function (y) ","x"],"39f25708a89c":["function (y) ","x"],"39f27975c667":["function (y) ","x"]},"highlight":{"on":"plotly_click","persistent":false,"dynamic":false,"selectize":false,"opacityDim":0.20000000000000001,"selected":{"opacity":1},"debounce":0,"ctGroups":["trigger"]},"shinyEvents":["plotly_hover","plotly_click","plotly_selected","plotly_relayout","plotly_brushed","plotly_brushing","plotly_clickannotation","plotly_doubleclick","plotly_deselect","plotly_afterplot","plotly_sunburstclick"],"base_url":"https://plot.ly"},"evals":[],"jsHooks":[]}</script>
+</div>
+</div>
+<bslib-tooltip placement="auto" bsoptions="[]" data-require-bs-version="5" data-require-bs-caller="tooltip()">
+    <template>Expand</template>
+    <span class="bslib-full-screen-enter badge rounded-pill">
+        <svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24" style="height:1em;width:1em;" aria-hidden="true" role="img"><path d="M20 5C20 4.4 19.6 4 19 4H13C12.4 4 12 3.6 12 3C12 2.4 12.4 2 13 2H21C21.6 2 22 2.4 22 3V11C22 11.6 21.6 12 21 12C20.4 12 20 11.6 20 11V5ZM4 19C4 19.6 4.4 20 5 20H11C11.6 20 12 20.4 12 21C12 21.6 11.6 22 11 22H3C2.4 22 2 21.6 2 21V13C2 12.4 2.4 12 3 12C3.6 12 4 12.4 4 13V19Z"></path></svg>
+    </span>
+</bslib-tooltip><script data-bslib-card-init="">bslib.Card.initializeAllCards();</script></div>
+</div>
+<div class="html-fill-item html-fill-container bslib-grid" style="display: grid; grid-template-columns: minmax(3em, 1fr);
+grid-auto-rows: minmax(0, 1fr);">
+<div class="card html-fill-item html-fill-container bslib-card" data-fill="false" data-bslib-card-init="" data-require-bs-caller="card()" data-full-screen="false">
+<div class="card-body html-fill-item html-fill-container">
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center collapsed html-fill-item html-fill-container" data-bs-toggle="collapse" data-bs-target=".callout-3-contents" aria-controls="callout-3" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container html-fill-item html-fill-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill html-fill-item html-fill-container">
+<span class="screen-reader-only">Note</span>How to read this chart &amp; significance tests
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end html-fill-item html-fill-container"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-3" class="callout-3-contents callout-collapse collapse html-fill-item html-fill-container">
+<div class="callout-body-container callout-body html-fill-item html-fill-container">
+<p>Each box shows the <strong>distribution of total stat gain</strong> for all evolution events triggered by that method. The central line is the median, the diamond is the mean, and individual points show each individual Pokémon evolution. Only triggers with at least 3 cases are included.</p>
+<p>Group differences were tested using the Kruskal-Wallis test <span class="citation" data-cites="kruskal1952">(Kruskal &amp; Wallis, 1952)</span> followed by pairwise Wilcoxon tests <span class="citation" data-cites="wilcoxon1945">(Wilcoxon, 1945)</span> with Bonferroni correction. All visualisations were created using ggplot2 <span class="citation" data-cites="wickham2016">(Wickham, 2016)</span> and the tidyverse <span class="citation" data-cites="wickham2019">(Wickham, Averick, Bryan, &amp; Chang, 2019)</span>.</p>
+<strong>All three trigger types differ significantly from each other:</strong>
+<ul>
+<li>Kruskal-Wallis test: χ²(2) = 18.99, p &lt; 0.001</li>
+<li>use-item vs level-up: p = 0.008 (Wilcoxon, Bonferroni corrected)</li>
+<li>use-item vs trade: p &lt; 0.001</li>
+<li>level-up vs trade: p = 0.008</li>
+</ul>
+<p>This suggests that the effort or rarity required to trigger an evolution is reflected in the resulting stat boost — items and trades represent more deliberate or rare events than simply levelling up.</p>
+</div>
+</div>
+</div>
+</div>
+<bslib-tooltip placement="auto" bsoptions="[]" data-require-bs-version="5" data-require-bs-caller="tooltip()">
+    <template>Expand</template>
+    <span class="bslib-full-screen-enter badge rounded-pill">
+        <svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24" style="height:1em;width:1em;" aria-hidden="true" role="img"><path d="M20 5C20 4.4 19.6 4 19 4H13C12.4 4 12 3.6 12 3C12 2.4 12.4 2 13 2H21C21.6 2 22 2.4 22 3V11C22 11.6 21.6 12 21 12C20.4 12 20 11.6 20 11V5ZM4 19C4 19.6 4.4 20 5 20H11C11.6 20 12 20.4 12 21C12 21.6 11.6 22 11 22H3C2.4 22 2 21.6 2 21V13C2 12.4 2.4 12 3 12C3.6 12 4 12.4 4 13V19Z"></path></svg>
+    </span>
+</bslib-tooltip><script data-bslib-card-init="">bslib.Card.initializeAllCards();</script></div>
+</div>
+</div>
+</div>
+<div id="references" class="dashboard-page tab-pane grid-skip html-fill-item html-fill-container" data-orientation="rows" aria-labelledby="tab-references">
+<div class="html-fill-item html-fill-container bslib-grid" style="display: grid; grid-template-rows: minmax(3em, max-content); grid-auto-columns: minmax(0, 1fr);">
+<div class="card html-fill-item html-fill-container bslib-card" data-fill="false" data-bslib-card-init="" data-require-bs-caller="card()" data-full-screen="false">
+<div class="card-body html-fill-item html-fill-container">
+<div id="refs" class="references csl-bib-body hanging-indent html-fill-item html-fill-container" data-entry-spacing="0" data-line-spacing="2" role="list">
+<div id="ref-kruskal1952" class="csl-entry html-fill-item html-fill-container" role="listitem">
+Kruskal, W. H., &amp; Wallis, W. A. (1952). Use of ranks in one-criterion variance analysis. <em>Journal of the American Statistical Association</em>, <em>47</em>(260), 583–621. <a href="https://doi.org/10.2307/2280779">https://doi.org/10.2307/2280779</a>
+</div>
+<div id="ref-wickham2016" class="csl-entry html-fill-item html-fill-container" role="listitem">
+Wickham, H. (2016). <em>ggplot2: Elegant graphics for data analysis</em>. Springer-Verlag.
+</div>
+<div id="ref-wickham2019" class="csl-entry html-fill-item html-fill-container" role="listitem">
+Wickham, H., Averick, M., Bryan, J., &amp; Chang, W. (2019). Welcome to the tidyverse. <em>Journal of Open Source Software</em>, <em>4</em>(43), 1686. <a href="https://doi.org/10.21105/joss.01686">https://doi.org/10.21105/joss.01686</a>
+</div>
+<div id="ref-wilcoxon1945" class="csl-entry html-fill-item html-fill-container" role="listitem">
+Wilcoxon, F. (1945). Individual comparisons by ranking methods. <em>Biometrics Bulletin</em>, <em>1</em>(6), 80–83. <a href="https://doi.org/10.2307/3001968">https://doi.org/10.2307/3001968</a>
+</div>
+</div>
+</div>
+<bslib-tooltip placement="auto" bsoptions="[]" data-require-bs-version="5" data-require-bs-caller="tooltip()">
+    <template>Expand</template>
+    <span class="bslib-full-screen-enter badge rounded-pill">
+        <svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 24 24" style="height:1em;width:1em;" aria-hidden="true" role="img"><path d="M20 5C20 4.4 19.6 4 19 4H13C12.4 4 12 3.6 12 3C12 2.4 12.4 2 13 2H21C21.6 2 22 2.4 22 3V11C22 11.6 21.6 12 21 12C20.4 12 20 11.6 20 11V5ZM4 19C4 19.6 4.4 20 5 20H11C11.6 20 12 20.4 12 21C12 21.6 11.6 22 11 22H3C2.4 22 2 21.6 2 21V13C2 12.4 2.4 12 3 12C3.6 12 4 12.4 4 13V19Z"></path></svg>
+    </span>
+</bslib-tooltip><script data-bslib-card-init="">bslib.Card.initializeAllCards();</script></div>
+<div id="3ade8a4a-fb1d-4a6c-8409-ac45482d5fc9" class="hidden html-fill-item html-fill-container">
+
+</div>
+</div>
+</div>
+</div>
+
+
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp('/' + window.location.host + '/');
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+</div> <!-- /container fluid -->
+
+<script type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (_event) {
+  if (window.bslib.Card) {
+    window.bslib.Card.initializeAllCards();
+  }
+}); 
+</script>
+  
+
+
+
+</body></html>
